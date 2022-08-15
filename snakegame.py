@@ -2,11 +2,17 @@ import pygame
 
 from pygame.locals import *
 
+def draw_block():
+    surface.fill((250, 222, 240))
+    surface.blit(block,(block_x,block_y))
+    pygame.display.flip()
+
+
 if __name__== "__main__":
     pygame.init()
 
     surface= pygame.display.set_mode((1000,500))
-    surface.fill((66,66,0))
+    surface.fill((250, 222, 240))
 
     block=pygame.image.load('resources/block.jpg').convert()
     block_x=100
