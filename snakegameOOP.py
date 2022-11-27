@@ -4,6 +4,7 @@ import time
 import random
 
 SIZE=40
+BACKGROUND_COLOR=(110,50,60)
 
 class Apple:
     def __init__(self, parent_screen):
@@ -18,7 +19,7 @@ class Apple:
         pygame.display.flip()
 
     def move(self):
-        self.x= random.randint(0,25)*SIZE
+        self.x= random.randint(0,20)*SIZE
         self.y= random.randint(0,20)*SIZE
 
 class Snake:
@@ -97,10 +98,26 @@ class Game:
         self.apple.draw()
         self.display_socore()
         pygame.display.flip()
-
+        #colliding wiht apple
         if self.is_collision (self.snake.x[0],self.snake.y[0], self.apple.x,self.apple.y):
             self.snake.increase_length()
             self.apple.move()
+
+        #colliding wiht itself(head collision with rest of the body
+        for i in range(3,self.snake.length):
+            if self.is_collision(self.snake.x[0], self.snake.y[0],self.snake.x[i],self.snake.y[i]):
+                raise "Game Over"
+    
+    def show_game_over(self):
+        self.surface.fill(BACKGROUND_COLOR)
+        font = pygame.font.SysFont('arial',30)
+        line1 = font.render (f"Game is over! Your score is {self.snake.length}",True, (255,255,255))
+        self.surface.blit(line1, (200,300))
+        line2 = font.render (f"To play again press Enter. To exit press Escape",True, (255,255,255))
+        self.surface.blit(line2, (200,350))
+        pygame.display.flip()
+        pass
+
     
     def display_socore(self):
         font = pygame.font.SysFont('arial',30)
@@ -111,6 +128,7 @@ class Game:
     def run(self):
         
         running= True
+        pause = False
 
         while running:
             for event in pygame.event.get():
@@ -127,8 +145,14 @@ class Game:
                         self.snake.move_right()
                 elif event.type == QUIT:
                     running = False 
+            try:
+                if not pause:
+                    self.play()
 
-            self.play()
+            except Exception as e:
+                self.show_game_over()
+                pause= True
+
             time.sleep(0.3)
 
 if __name__=='__main__':
