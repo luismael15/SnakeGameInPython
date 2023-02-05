@@ -20,7 +20,7 @@ class Apple:
 
     def move(self):
         self.x= random.randint(0,20)*SIZE
-        self.y= random.randint(0,20)*SIZE
+        self.y= random.randint(0,19)*SIZE
 
 class Snake:
     def __init__(self,parent_screen,length):
@@ -123,7 +123,12 @@ class Game:
         font = pygame.font.SysFont('arial',30)
         score = font.render (f"Score:{self.snake.length}",True, (255,255,255))
         self.surface.blit(score, (800,10))
-            
+
+    def reset(self):
+        self.snake= Snake(self.surface, 1)
+        self.apple= Apple(self.surface)
+
+
 
     def run(self):
         
@@ -135,14 +140,18 @@ class Game:
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
                         running=False
-                    if event.key== K_UP:
-                        self.snake.move_up()
-                    if event.key== K_DOWN:
-                        self.snake.move_down()
-                    if event.key== K_LEFT:
-                        self.snake.move_left()
-                    if event.key== K_RIGHT:
-                        self.snake.move_right()
+                    if event.key == K_RETURN:
+                        pause = False
+                    if not pause: 
+                        if event.key== K_UP:
+                            self.snake.move_up()
+                        if event.key== K_DOWN:
+                            self.snake.move_down()
+                        if event.key== K_LEFT:
+                            self.snake.move_left()
+                        if event.key== K_RIGHT:
+                            self.snake.move_right()
+
                 elif event.type == QUIT:
                     running = False 
             try:
@@ -152,6 +161,7 @@ class Game:
             except Exception as e:
                 self.show_game_over()
                 pause= True
+                self.reset()
 
             time.sleep(0.3)
 
